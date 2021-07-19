@@ -68,13 +68,14 @@ export default function Rightbar({ user }) {
   const ProfileRightbar = () => {
     return (
       <>
+        
         {user.username !== currentUser.username && (
           <button className="rightbarFollowButton" onClick={handleClick}>
             {followed ? "Unfollow" : "Follow"}
             {followed ? <Remove /> : <Add />}
           </button>
         )}
-        <h4 className="rightbarTitle">User information</h4>
+        <h4 className="rightbarTitle">Personal Info</h4>
         <div className="rightbarInfo">
           <div className="rightbarInfoItem">
             <span className="rightbarInfoKey">City:</span>
@@ -95,7 +96,7 @@ export default function Rightbar({ user }) {
             </span>
           </div>
         </div>
-        <h4 className="rightbarTitle">User friends</h4>
+        <h4 className="rightbarTitle">Your Retrievers</h4>
         <div className="rightbarFollowings">
           {friends.map((friend) => (
             <Link

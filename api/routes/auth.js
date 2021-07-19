@@ -5,18 +5,22 @@ const bcrypt = require("bcrypt");
 //REGISTER
 router.post("/register", async (req, res) => {
   try {
-    //generate new password
+    //add a hashcode to the password. 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-    //create new user
+    //create a new user
     const newUser = new User({
       username: req.body.username,
       email: req.body.email,
       password: hashedPassword,
+      from: req.body.from,
+      city: req.body.city,
+      relationship: req.body.relationship,
+      profilePicture: req.body.profilePicture
     });
 
-    //save user and respond
+    //save a user
     const user = await newUser.save();
     res.status(200).json(user);
   } catch (err) {
@@ -27,9 +31,11 @@ router.post("/register", async (req, res) => {
 //LOGIN
 router.post("/login", async (req, res) => {
   try {
+    //check email validity
     const user = await User.findOne({ email: req.body.email });
     !user && res.status(404).json("user not found");
-
+    
+    //check pwd validity
     const validPassword = await bcrypt.compare(req.body.password, user.password)
     !validPassword && res.status(400).json("wrong password")
 

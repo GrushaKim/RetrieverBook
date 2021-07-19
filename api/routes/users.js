@@ -26,6 +26,22 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+//upload a profile picture
+router.put("/uploadprofile/:id", async (req, res) => {
+  if (req.body.userId === req.params.id){
+    try{
+      const user = await User.findByIdAndUpdate(req.params.id, {
+        $set: {profilePicture: req.body.profilePicture}
+      });
+      res.status(200).json("Your profile picture has been uploaded.");
+    } catch (err){
+      return res.status(500).json(err);
+    }
+  } else {
+    return res.status(403).json("You can upload only your own profile picture!");
+  }
+});
+
 //delete user
 router.delete("/:id", async (req, res) => {
   if (req.body.userId === req.params.id || req.body.isAdmin) {
@@ -76,7 +92,6 @@ router.get("/friends/:userId", async (req, res) => {
 });
 
 //follow a user
-
 router.put("/:id/follow", async (req, res) => {
   if (req.body.userId !== req.params.id) {
     try {
@@ -98,7 +113,6 @@ router.put("/:id/follow", async (req, res) => {
 });
 
 //unfollow a user
-
 router.put("/:id/unfollow", async (req, res) => {
   if (req.body.userId !== req.params.id) {
     try {

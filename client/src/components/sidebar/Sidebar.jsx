@@ -3,10 +3,8 @@ import {
   RssFeed,
   Chat,
   PlayCircleFilledOutlined,
-  Group,
-  Bookmark,
+  Mood,
   HelpOutline,
-  WorkOutline,
   Event,
   School,
 } from "@material-ui/icons";
@@ -31,8 +29,8 @@ export default function Sidebar() {
             <span className="sidebarListItemText">Videos</span>
           </li>
           <li className="sidebarListItem">
-            <Group className="sidebarIcon" />
-            <span className="sidebarListItemText">Groups</span>
+            <Mood className="sidebarIcon" />
+            <span className="sidebarListItemText">Retriever Hacks</span>
           </li>
           <li className="sidebarListItem">
             <HelpOutline className="sidebarIcon" />

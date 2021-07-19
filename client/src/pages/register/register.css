@@ -32,8 +32,8 @@
   font-size: 24px;
 }
 
-.loginBox{
-    height: 400px;
+.registerBox{
+    height: 600px;
     padding: 20px;
     background-color: white;
     border-radius: 10px;
@@ -54,8 +54,30 @@
     outline: none;
 }
 
+.selectOption{
+  height: 40px;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.loginInput2{
+    height: 50px;
+    border-radius: 10px;
+    border: 1px solid gray;
+    padding-left: 20px;
+    align-content: flex-start;
+    display: flex;
+    align-items: center;
+}
+
+.uploadText{
+  padding-left: 10px;
+  font-size: 18px;
+  color: gray;
+}
+
 .loginButton{
-    width: 60%;
+    width: 100%;
     align-self: center;
     height: 50px;
     border-radius: 10px;
@@ -73,7 +95,7 @@
 }
 
 .loginRegisterButton{
-    width: 60%;
+    width: 100%;
     align-self: center;
     height: 50px;
     border-radius: 10px;
