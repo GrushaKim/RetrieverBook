@@ -9,7 +9,7 @@ const userRoute = require("./routes/users");
 const authRoute = require("./routes/auth");
 const postRoute = require("./routes/posts");
 const convRoute = require("./routes/conversations");
-const router = express.Router();
+const chatRoute = require("./routes/chats");
 const path = require("path");
 
 dotenv.config();
@@ -50,7 +50,8 @@ app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/convs", convRoute);
+app.use("/api/chats", chatRoute);
 
 app.listen(8800, () => {
-  console.log("Backend server is running!");
+  console.log("Backend server is working at port - 8800");
 });

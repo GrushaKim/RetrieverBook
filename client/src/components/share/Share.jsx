@@ -1,6 +1,6 @@
 import "./share.css";
 import { PermMedia, Label, Room, EmojiEmotions, Cancel } from "@material-ui/icons";
-import { useContext, useRef, useState } from "react";
+import { useContext, useRef, useState} from "react";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 
@@ -9,6 +9,7 @@ export default function Share() {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const desc = useRef();
   const [file, setFile] = useState(null);
+
 
   // create a post w or w/o an image file
   const submitHandler = async (e) => {
@@ -53,8 +54,8 @@ export default function Share() {
             ref={desc}
           />
         </div>
-        <hr className="shareHr" />
         {/* image preview */}
+        <hr className="shareHr" />
         {file && (
           <div className="shareImgContainer">
             <img className="shareImg" src={URL.createObjectURL(file)} alt="" />
