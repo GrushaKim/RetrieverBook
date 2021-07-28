@@ -12,7 +12,8 @@
 .chatBoxWrapper{
     display: flex;
     flex-direction: column;
-
+    position: relative;
+    justify-content: space-between;
 }
 /* chat history */
 .chatBoxTop{
@@ -63,4 +64,12 @@
 
 .chatMenuInput:focus{
     outline: none;
+}
+
+.noConversationText{
+    position: absolute;
+    top: 10%;
+    font-size: 50px;
+    color: rgb(216, 206, 206);
+    cursor: default;
 }

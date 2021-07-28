@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./Conversation.css";
+import axios from "axios";
 
 export default function Conversation({conversation, currentUser}) {
 
@@ -7,17 +8,31 @@ export default function Conversation({conversation, currentUser}) {
     const [user, setUser] = useState(null);
     
     useEffect(() => {
-        const friendId = conversation.member.find(m=>m !== currentUser._id);
-    }, []);
+        const friendId = conversation.members.find((m)=>m !== currentUser._id);
+        
+        const getUser = async () => {
+            try {
+                const res = await axios("/users?userId="+friendId);
+                setUser(res.data);
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        getUser();
+    }, [currentUser, conversation]);
 
     return (
         <div className="conversation">
             <img 
                 className="conversationImg"
-                src="https://www.rover.com/blog/wp-content/uploads/2021/06/denvers_golden_life-1024x1024.jpg" 
+                src={
+                    user?.profilePicture
+                    ? PF + user.profilePicture
+                    : PF + "person/noAvatar.png"
+                }
                 alt="" 
             />
-            <span className="conversationName">Zariah</span>
+            <span className="conversationName">{user?.username}</span>
         </div>
     )
 }
