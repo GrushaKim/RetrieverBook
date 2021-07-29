@@ -1,11 +1,12 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import ChatOnline from "../../components/chatOnline/ChatOnline";
 import Conversation from "../../components/conversation/Conversation";
 import Message from "../../components/message/Message";
 import Topbar from "../../components/topbar/Topbar";
 import { AuthContext } from "../../context/AuthContext";
 import "./Chat.css";
+import {io} from "socket.io-client";
 
 export default function Chat() {
 
@@ -13,6 +14,13 @@ export default function Chat() {
     const [conversations, setConversations] = useState([]);
     const [currentChat, setCurrentChat] = useState(null);
     const [messages, setMessages] = useState([]);
+    const [newMessage, setNewMessage] = useState("");
+    const [socket, setSocket] = useState(null);
+    const scrollRef = useRef();
+
+    useEffect(() => {
+        setSocket(io("ws://localhost:8900"));
+    },[]);
 
     // get conversation info of each friend (id, username, profile picture)
     useEffect(() => {
@@ -40,6 +48,26 @@ export default function Chat() {
         getMessages();
     },[currentChat]);
 
+    // send a message 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const message = {
+            sender: user._id,
+            text: newMessage,
+            conversationId: currentChat._id,
+        };
+        try {
+            const res = await axios.post("/chats", message);
+            setMessages([...messages, res.data]);
+            setNewMessage("");
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    useEffect(() => {
+        scrollRef.current?.scrollIntoView({behavior: "smooth"});
+    }, [messages]);
 
     return (
         <>
@@ -67,15 +95,19 @@ export default function Chat() {
                    
                     <div className="chatBoxTop">
                         {messages.map((m) => (
+                            <div ref={scrollRef}>
                             <Message message={m} own={m.sender === user._id} />
+                            </div>
                         ))}
                     </div>
                     <div className="chatBoxBottom">
                         <textarea 
                             className="chatMessageInput"
                             placeholder="leave your message"
+                            onChange={(e)=>setNewMessage(e.target.value)}
+                            value={newMessage}
                         ></textarea>
-                        <button className="chatSubmitButton">Send</button>
+                        <button className="chatSubmitButton" onClick={handleSubmit}>Send</button>
                     </div>
                     </> : <span className="noConversationText"> Start to chat!</span>}
                 </div>
