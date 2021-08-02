@@ -1,41 +1,44 @@
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import './ChatOnline.css';
 
-export default function ChatOnline() {
+export default function ChatOnline({onlineUsers, currentId, setCurrentChat}) {
+
+    const [friends, setFriends] = useState([]);
+    const [onlineFriends, setOnlineFriends] = useState([]);
+    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
+    // get all friends from the current user
+    useEffect(() => {
+        const getFriends = async () => {
+            const res = await axios.get("/users/friends/"+currentId);
+            setFriends(res.data);
+        };
+        getFriends();
+    },[currentId]);
+
+    
+    useEffect(() => {
+        setOnlineFriends(friends.filter((f) => onlineUsers.includes(f._id)));
+    },[friends, onlineFriends]);
+
     return (
         <div className="chatOnline">
-            <div className="chatOnlineFriend">
+            {onlineFriends.map((o) => (
+             <div className="chatOnlineFriend">
                 <div className="chatOnlineImgContainer">
                     <img
                         className="chatOnlineImg" 
-                        src="https://www.rover.com/blog/wp-content/uploads/2021/06/denvers_golden_life-1024x1024.jpg"  alt="" />
+                        src={o?.profilePicture ? PF+o.profilePicture : PF+"person/noAvatar.png"}
+                        />
                     <div className="chatOnlineBadge">
 
                     </div>
                 </div>
-                <span className="chatOnlineName">Grushenka</span>
-            </div>
-            <div className="chatOnlineFriend">
-                <div className="chatOnlineImgContainer">
-                    <img
-                        className="chatOnlineImg" 
-                        src="https://www.rover.com/blog/wp-content/uploads/2021/06/denvers_golden_life-1024x1024.jpg"  alt="" />
-                    <div className="chatOnlineBadge">
-
-                    </div>
-                </div>
-                <span className="chatOnlineName">Grushenka</span>
-            </div>
-            <div className="chatOnlineFriend">
-                <div className="chatOnlineImgContainer">
-                    <img
-                        className="chatOnlineImg" 
-                        src="https://www.rover.com/blog/wp-content/uploads/2021/06/denvers_golden_life-1024x1024.jpg"  alt="" />
-                    <div className="chatOnlineBadge">
-
-                    </div>
-                </div>
-                <span className="chatOnlineName">Grushenka</span>
-            </div>
+               <span className="chatOnlineName">{o?.username}</span>
+             </div>
+            ))}
+        
         </div>
     )
 }

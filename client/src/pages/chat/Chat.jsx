@@ -15,12 +15,37 @@ export default function Chat() {
     const [currentChat, setCurrentChat] = useState(null);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
-    const [socket, setSocket] = useState(null);
+    const [arrivedMessage, setArrivedMessage] = useState(null);
+    const [onlineUsers, setOnlineUsers] = useState([]);
+    const socket = useRef();
     const scrollRef = useRef();
 
+    // connect to socket
     useEffect(() => {
-        setSocket(io("ws://localhost:8900"));
+        socket.current = io("ws://localhost:8900");
+        socket.current.on("getMessage", data => {
+            setArrivedMessage({
+                sender: data.senderId,
+                text: data.text,
+                createdAt: Date.now(),
+            });
+        });
     },[]);
+
+    useEffect(() => {
+        arrivedMessage && currentChat?.members.includes(arrivedMessage.sender) &&
+        setMessages(prev => [...prev, arrivedMessage])
+    }, [arrivedMessage, currentChat]);
+
+    useEffect(() => {
+        socket.current.emit("addUser", user._id);
+        socket.current.on("getUsers", users=>{
+            setOnlineUsers(users);
+        })
+    },[user]);
+
+    // take event(message) from server.
+    
 
     // get conversation info of each friend (id, username, profile picture)
     useEffect(() => {
@@ -56,6 +81,17 @@ export default function Chat() {
             text: newMessage,
             conversationId: currentChat._id,
         };
+        
+        // distinguish a receiver
+        const receiverId = currentChat.members.find((member) => member !== user._id);
+        
+        //send a message to socket server. 
+        socket.current.emit("sendMessage", {
+            senderId: user._id,
+            receiverId,
+            text: newMessage,
+        });
+
         try {
             const res = await axios.post("/chats", message);
             setMessages([...messages, res.data]);
@@ -114,7 +150,11 @@ export default function Chat() {
             </div>
             <div className="chatOnline">
                 <div className="chatOnlineWrapper">
-                    <ChatOnline />
+                    <ChatOnline 
+                        onlineUsers={onlineUsers} 
+                        currentId={user._id} 
+                        setCurrentChat={setCurrentChat}
+                    />
                 </div>
             </div>
         </div>
