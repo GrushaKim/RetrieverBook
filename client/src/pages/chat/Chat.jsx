@@ -32,16 +32,19 @@ export default function Chat() {
         });
     },[]);
 
+    // add arrived msgs. 
     useEffect(() => {
         arrivedMessage && currentChat?.members.includes(arrivedMessage.sender) &&
         setMessages(prev => [...prev, arrivedMessage])
     }, [arrivedMessage, currentChat]);
 
+    // check if a current user's followings are online. 
     useEffect(() => {
         socket.current.emit("addUser", user._id);
         socket.current.on("getUsers", users=>{
-            setOnlineUsers(users);
-        })
+            setOnlineUsers(
+                user.followings.filter((f) => users.some((u) => u.userId === f)));
+        });
     },[user]);
 
     // take event(message) from server.
