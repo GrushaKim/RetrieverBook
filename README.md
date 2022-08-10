@@ -1,3 +1,3 @@
 # RetrieverBook
 Simple social platform for retrievers all over the world.
-The project is based on MERN tech.
+The project is based on MERN tech for practice purpose only. 
